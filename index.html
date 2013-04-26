@@ -12,10 +12,100 @@
 
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
-        <link href="css/normalize.css" rel="stylesheet" />
-        <link href="css/main.css" rel="stylesheet" />
+	    <link href="css/reset.css" rel="stylesheet" />
 
 	    <style type="text/less">
+		    @borderColor: hsl(0,0%,0%);
+		    @backgroundColor: hsl(0,0%,80%);
+		    @shadowColor: hsl(0,0%,20%);
+		    @pipeColor: hsl(0,0%,60%);
+
+		    h1 { font-size: 28px; }
+		    h2 { font-size: 20px; }
+
+		    .tile {
+			    .rounded;
+			    width: 250px;
+			    padding: 8px;
+			    margin: 10px;
+
+
+
+			    img { width: 100%; }
+			    .tags { .clearfix; }
+			    .tags > li {
+				    float: left;
+				    margin-left: 5px;
+				    padding-left: 5px;
+				    border-left: 1px solid @pipeColor;
+		            &:first-child {
+			            margin-left: 0; padding-left: 0; border-left: none;
+		            }
+			    }
+		    }
+
+		    .flyout {
+		        .rounded(@backgroundColor, @borderColor, @shadowColor);
+		        .addArrow(15px, 80px, @backgroundColor, @borderColor);
+		        width: 400px;
+		        position: absolute;
+		        top: 50px; left: 280+15px;
+
+		        header {
+			        background: @borderColor;
+			        color: hsl(0,0%,90%);
+			        padding: 8px;
+			        position: relative;
+		            .favorite {
+			            float: right;
+		                &.on { color: yellow; }
+			        }
+			    }
+
+		        section {
+		            .clearfix;
+		            padding: 8px;
+
+		            img {
+			            width: 150px;
+			            float: left;
+			            margin-right: 10px;
+		            }
+			    }
+
+		    }
+
+
+
+		    .clearfix {
+		        &:after { content: ""; display: block; clear: both; }
+		    }
+		    .rounded(@backgroundColor: @backgroundColor, @borderColor: @borderColor, @shadowColor: @shadowColor) {
+				border-radius: 5px;
+				border: 1px solid @borderColor;
+                background: @backgroundColor;
+                box-shadow: 2px 2px 5px 0px @shadowColor;
+			}
+
+		    .addArrow(@arrowSize, @top, @backgroundColor, @borderColor) {
+                &:before, &:after {
+                    content:"";
+                    display: block;
+				    position: absolute;
+				    width: 0; height: 0;
+			    }
+                &:before {
+		            left: -@arrowSize*2-1; top: @top;
+				    border: @arrowSize solid transparent;
+				    border-right-color: @borderColor;
+                }
+			    &:after {
+				    left: -@arrowSize*2; top: @top;
+				    border: @arrowSize solid transparent;
+				    border-right-color: @backgroundColor;
+				  }
+			}
+
 
 	    </style>
 
@@ -31,9 +121,35 @@
 
 
 
-        <!-- Add your site or application content here -->
-        <p>Hello world! This is HTML5 Boilerplate.</p>
+    <article class="tile">
+	    <img src="http://lorempixel.com/300/400" />
+	    <h1>Bacon ipsum </h1>
+	    <h2>dolor sit amet </h2>
+	    <ul class="tags">
+		    <li>Flank</li>
+		    <li>andouille</li>
+		    <li>short</li>
+		    <li>ribs</li>
+		    <li>bacon</li>
+	    </ul>
 
+    </article>
+
+
+    <article class="flyout">
+	    <header>
+		    <h1>
+			    Bacon Ipsum
+			    <span class="favorite on"> &#x2606; </span>
+		    </h1>
+	    </header>
+	    <section>
+		    <img src="http://lorempixel.com/400/300" />
+		    <p>
+			    Brisket chuck tail ball tip kielbasa beef ham swine strip steak fatback meatloaf pork belly chicken shoulder. Capicola frankfurter boudin chicken, t-bone pork chop salami ham.
+		    </p>
+	    </section>
+    </article>
 
     </body>
 </html>
