@@ -34,6 +34,7 @@
 			    img { width: 100%; }
 			    .tags { .clearfix; }
 			    .tags > li {
+				    list-style: none;
 				    float: left;
 				    margin-left: 5px;
 				    padding-left: 5px;
@@ -44,7 +45,7 @@
 			    }
 		    }
 
-		    .flyout {
+		    .flyout.on {
 		        .rounded(@backgroundColor, @borderColor, @shadowColor);
 		        .addArrow(15px, 80px, @backgroundColor, @borderColor);
 		        width: 400px;
@@ -136,7 +137,7 @@
     </article>
 
 
-    <article class="flyout">
+    <article class="flyout on">
 	    <header>
 		    <h1>
 			    Bacon Ipsum
