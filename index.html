@@ -23,34 +23,37 @@
 		    h1 { font-size: 28px; font-weight: normal; }
 		    h2 { font-size: 20px; font-weight: normal; }
 
+		    .tags { .clearfix; }
+		    .tags > li {
+			    list-style: none;
+			    float: left;
+			    margin-left: 5px;
+			    padding-left: 5px;
+			    border-left: 1px solid @pipeColor;
+			    &:first-child {
+				    margin-left: 0; padding-left: 0; border-left: none;
+			    }
+		    }
+
 		    .tile {
 			    .rounded;
 			    width: 250px;
 			    padding: 8px;
 			    margin: 10px;
 
-
-
 			    img { width: 100%; }
-			    .tags { .clearfix; }
-			    .tags > li {
-				    list-style: none;
-				    float: left;
-				    margin-left: 5px;
-				    padding-left: 5px;
-				    border-left: 1px solid @pipeColor;
-		            &:first-child {
-			            margin-left: 0; padding-left: 0; border-left: none;
-		            }
-			    }
 		    }
 
-		    .flyout.on {
+		    .flyout {
 		        .rounded(@backgroundColor, @borderColor, @shadowColor);
 		        .addArrow(15px, 80px, @backgroundColor, @borderColor);
+
 		        width: 400px;
 		        position: absolute;
 		        top: 50px; left: 280+15px;
+
+		        display: none;
+		        &.on { display: block; }
 
 		        header {
 			        background: @borderColor;
@@ -72,9 +75,16 @@
 			            float: left;
 			            margin-right: 10px;
 		            }
+		            p, ul, div {
+			            margin-left: 150+10px;
+		            }
 			    }
 
 		    }
+
+
+
+
 
 
 
@@ -159,6 +169,13 @@
 		    <p data-bind="{ text: data.description }">
 			    (description goes here)
 		    </p>
+			<ul class="tags"
+			    data-bind-repeat="data.tags"
+				>
+			    <li
+					data-bind="{ text: data }"
+					> (tag names are repeated here) </li>
+		    </ul>
 	    </section>
     </article>
 
