@@ -20,8 +20,8 @@
 		    @shadowColor: hsl(0,0%,20%);
 		    @pipeColor: hsl(0,0%,60%);
 
-		    h1 { font-size: 28px; }
-		    h2 { font-size: 20px; }
+		    h1 { font-size: 28px; font-weight: normal; }
+		    h2 { font-size: 20px; font-weight: normal; }
 
 		    .tile {
 			    .rounded;
@@ -144,7 +144,7 @@
 		    <h1>
 			    <span
 					  data-bind="this.set({ text: data.title })"
-				      > This title will be replaced.
+				      > (title goes here)
 			    </span>
 			    <span class="favorite on"
 			          data-bind="this.toggleClass('on', data.isFavorite)"
@@ -156,8 +156,8 @@
 		    <img src="http://lorempixel.com/400/300"
 		         data-bind="this.set('src', data.imageUrl)"
 				/>
-		    <p>
-			    Brisket chuck tail ball tip kielbasa beef ham swine strip steak fatback meatloaf pork belly chicken shoulder. Capicola frankfurter boudin chicken, t-bone pork chop salami ham.
+		    <p data-bind="this.set('text', data.description)">
+			    (description goes here)
 		    </p>
 	    </section>
     </article>

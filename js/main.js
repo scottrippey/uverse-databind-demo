@@ -2,27 +2,31 @@ window.addEvent('domready', function(){
 
 	var flyoutDataItems = [
 		{
-			title: "Bacon andouille ribeye frankfurter"
+			title: "Bacon ipsum"
 			,isFavorite: true
 			,imageUrl: "http://lorempixel.com/400/300"
+			,description: "Bacon ipsum risket chuck tail ball tip kielbasa beef ham swine strip steak fatback meatloaf pork belly chicken shoulder. Capicola frankfurter boudin chicken, t-bone pork chop salami ham."
 		}
 		,
 		{
-			title: "Ham biltong cow meatball "
+			title: "Pork ball tip shank"
 			,isFavorite: false
-			,imageUrl: "http://lorempixel.com/40/30"
+			,imageUrl: "http://lorempixel.com/160/90"
+			,description: "Pork ball tip shank doner pancetta chicken. Pork loin swine pastrami rump drumstick ribeye kielbasa venison doner sausage spare ribs ham hock tongue."
 		}
 		,
 		{
-			title: "Tongue fatback cow bresaola"
+			title: "Jerky short loin"
 			,isFavorite: true
-			,imageUrl: "http://lorempixel.com/44/33"
+			,imageUrl: "http://lorempixel.com/300/400"
+			,description: "Jerky short loin chuck hamburger jowl tail. Kielbasa turducken leberkas, frankfurter meatloaf prosciutto pork loin biltong hamburger beef pig. Chuck spare ribs pig, ham hock boudin shank bacon turkey pork chop pork loin kielbasa ball tip flank."
 		}
 		,
 		{
-			title: "Prosciutto short loin frankfurter"
+			title: "Sirloin pancetta jerky "
 			,isFavorite: false
-			,imageUrl: "http://lorempixel.com/444/333"
+			,imageUrl: "http://lorempixel.com/300/300"
+			,description: "Sirloin pancetta jerky doner fatback corned beef pork loin. Meatball strip steak venison flank andouille ground round pancetta meatloaf chuck prosciutto filet mignon tenderloin."
 		}
 	];
 
