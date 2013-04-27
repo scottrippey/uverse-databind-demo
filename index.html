@@ -148,7 +148,7 @@
 			    </span>
 			    <span class="favorite on"
 			          data-bind="this.toggleClass('on', data.isFavorite)"
-					  > &#x2606;
+					  > &#x2605;
 			    </span>
 		    </h1>
 	    </header>
@@ -156,7 +156,7 @@
 		    <img src="http://lorempixel.com/400/300"
 		         data-bind="this.set('src', data.imageUrl)"
 				/>
-		    <p data-bind="this.set('text', data.description)">
+		    <p data-bind="{ text: data.description }">
 			    (description goes here)
 		    </p>
 	    </section>
