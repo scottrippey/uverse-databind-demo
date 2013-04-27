@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+
+        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+	    <link href="css/reset.css" rel="stylesheet" />
+
+	    <style type="text/less">
+		    @borderColor: hsl(0,0%,0%);
+		    @backgroundColor: hsl(0,0%,80%);
+		    @shadowColor: hsl(0,0%,20%);
+		    @pipeColor: hsl(0,0%,60%);
+
+		    h1 { font-size: 28px; }
+		    h2 { font-size: 20px; }
+
+		    .tile {
+			    .rounded;
+			    width: 250px;
+			    padding: 8px;
+			    margin: 10px;
+
+
+
+			    img { width: 100%; }
+			    .tags { .clearfix; }
+			    .tags > li {
+				    list-style: none;
+				    float: left;
+				    margin-left: 5px;
+				    padding-left: 5px;
+				    border-left: 1px solid @pipeColor;
+		            &:first-child {
+			            margin-left: 0; padding-left: 0; border-left: none;
+		            }
+			    }
+		    }
+
+		    .flyout.on {
+		        .rounded(@backgroundColor, @borderColor, @shadowColor);
+		        .addArrow(15px, 80px, @backgroundColor, @borderColor);
+		        width: 400px;
+		        position: absolute;
+		        top: 50px; left: 280+15px;
+
+		        header {
+			        background: @borderColor;
+			        color: hsl(0,0%,90%);
+			        padding: 8px;
+			        position: relative;
+		            .favorite {
+			            float: right;
+		                &.on { color: yellow; }
+			        }
+			    }
+
+		        section {
+		            .clearfix;
+		            padding: 8px;
+
+		            img {
+			            width: 150px;
+			            float: left;
+			            margin-right: 10px;
+		            }
+			    }
+
+		    }
+
+
+
+		    .clearfix {
+		        &:after { content: ""; display: block; clear: both; }
+		    }
+		    .rounded(@backgroundColor: @backgroundColor, @borderColor: @borderColor, @shadowColor: @shadowColor) {
+				border-radius: 5px;
+				border: 1px solid @borderColor;
+                background: @backgroundColor;
+                box-shadow: 2px 2px 5px 0px @shadowColor;
+			}
+
+		    .addArrow(@arrowSize, @top, @backgroundColor, @borderColor) {
+                &:before, &:after {
+                    content:"";
+                    display: block;
+				    position: absolute;
+				    width: 0; height: 0;
+			    }
+                &:before {
+		            left: -@arrowSize*2-1; top: @top;
+				    border: @arrowSize solid transparent;
+				    border-right-color: @borderColor;
+                }
+			    &:after {
+				    left: -@arrowSize*2; top: @top;
+				    border: @arrowSize solid transparent;
+				    border-right-color: @backgroundColor;
+				  }
+			}
+
+
+	    </style>
+
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+		<script src="http://cdnjs.cloudflare.com/ajax/libs/mootools/1.4.5/mootools-core-full-compat-yc.js"></script>
+	    <script src="http://cdnjs.cloudflare.com/ajax/libs/less.js/1.3.3/less.min.js"></script>
+
+	    <script src="js/Element.dataBind.js"></script>
+
+	    <script src="js/main.js"></script>
+
+
+    </head>
+    <body>
+
+
+
+    <article class="tile">
+	    <img src="http://lorempixel.com/300/400" />
+	    <h1>Bacon ipsum </h1>
+	    <h2>dolor sit amet </h2>
+	    <ul class="tags">
+		    <li>Flank</li>
+		    <li>andouille</li>
+		    <li>short</li>
+		    <li>ribs</li>
+		    <li>bacon</li>
+	    </ul>
+
+    </article>
+
+
+    <article class="flyout on">
+	    <header>
+		    <h1>
+			    <span
+					  data-bind="this.set({ text: data.title })"
+				      > This title will be replaced.
+			    </span>
+			    <span class="favorite on"
+			          data-bind="this.toggleClass('on', data.isFavorite)"
+					  > &#x2606;
+			    </span>
+		    </h1>
+	    </header>
+	    <section>
+		    <img src="http://lorempixel.com/400/300"
+		         data-bind="this.set('src', data.imageUrl)"
+				/>
+		    <p>
+			    Brisket chuck tail ball tip kielbasa beef ham swine strip steak fatback meatloaf pork belly chicken shoulder. Capicola frankfurter boudin chicken, t-bone pork chop salami ham.
+		    </p>
+	    </section>
+    </article>
+
+    </body>
+</html>
