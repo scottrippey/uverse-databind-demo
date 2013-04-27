@@ -4,21 +4,25 @@ window.addEvent('domready', function(){
 		{
 			title: "Bacon andouille ribeye frankfurter"
 			,isFavorite: true
+			,imageUrl: "http://lorempixel.com/400/300"
 		}
 		,
 		{
 			title: "Ham biltong cow meatball "
 			,isFavorite: false
+			,imageUrl: "http://lorempixel.com/40/30"
 		}
 		,
 		{
 			title: "Tongue fatback cow bresaola"
 			,isFavorite: true
+			,imageUrl: "http://lorempixel.com/44/33"
 		}
 		,
 		{
 			title: "Prosciutto short loin frankfurter"
 			,isFavorite: false
+			,imageUrl: "http://lorempixel.com/444/333"
 		}
 	];
 
