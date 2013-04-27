@@ -114,6 +114,8 @@
 		<script src="http://cdnjs.cloudflare.com/ajax/libs/mootools/1.4.5/mootools-core-full-compat-yc.js"></script>
 	    <script src="http://cdnjs.cloudflare.com/ajax/libs/less.js/1.3.3/less.min.js"></script>
 
+	    <script src="js/Element.dataBind.js"></script>
+
 	    <script src="js/main.js"></script>
 
 
@@ -140,8 +142,14 @@
     <article class="flyout on">
 	    <header>
 		    <h1>
-			    Bacon Ipsum
-			    <span class="favorite on"> &#x2606; </span>
+			    <span
+					  data-bind="this.set({ text: data.title })"
+				      > This title will be replaced.
+			    </span>
+			    <span class="favorite on"
+			          data-bind="this.toggleClass('on', data.isFavorite)"
+					  > &#x2606;
+			    </span>
 		    </h1>
 	    </header>
 	    <section>
