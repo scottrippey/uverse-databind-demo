@@ -42,7 +42,7 @@ window.addEvent('domready', function(){
 	}
 
 	function updateFlyout(flyout, flyoutData) {
-		flyout.dataBind(flyoutData);
+		flyout.easyBind(flyoutData);
 	}
 
 	setInterval(showNextData, 2000);

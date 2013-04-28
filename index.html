@@ -120,11 +120,10 @@
 
 	    </style>
 
-        <script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
-		<script src="http://cdnjs.cloudflare.com/ajax/libs/mootools/1.4.5/mootools-core-full-compat-yc.js"></script>
-	    <script src="http://cdnjs.cloudflare.com/ajax/libs/less.js/1.3.3/less.min.js"></script>
+	    <script src="js/lib/less-1.3.3.js"></script>
+	    <script src="js/lib/mootools-core-1.4.5.js"></script>
 
-	    <script src="js/Element.dataBind.js"></script>
+	    <script src="js/lib/EasyBind-1.4.2.js"></script>
 
 	    <script src="js/main.js"></script>
 
@@ -169,10 +168,9 @@
 		    <p data-bind="{ text: data.description }">
 			    (description goes here)
 		    </p>
-			<ul class="tags"
-			    data-bind-repeat="data.tags"
-				>
+			<ul class="tags">
 			    <li
+					data-bind-repeat="data.tags"
 					data-bind="{ text: data }"
 					> (tag names are repeated here) </li>
 		    </ul>
