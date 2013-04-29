@@ -71,18 +71,27 @@
 			return cachedEasyBinding;
 		}
 
-		var unnestedBoundEls = getUnnestedBoundEls(el);
+		var boundEls = el.getElements('[data-bind],[data-bind-repeat]');
+		if (el.match('[data-bind]')) {
+			boundEls.push(el);
+		}
 
 		var bindings = [];
-		unnestedBoundEls.each(function(boundEl) {
-			var bindRepeatText, bindText, binding;
-			if (bindRepeatText = boundEl.get('data-bind-repeat')) {
+		boundEls.each(function(boundEl) {
+			var nestedParent = boundEl.getParent('[data-bind-repeat]');
+			var isNested = (nestedParent && el.contains(nestedParent));
+			if (isNested)
+				return;
+
+			var bindRepeatText = boundEl.get('data-bind-repeat')
+				, bindText = boundEl.get('data-bind')
+				, binding;
+			if (bindRepeatText && (boundEl !== el)) {
 				binding = createDataRepeaterBinding(boundEl, bindRepeatText);
-				bindings.push(binding);
-			} else if (bindText = boundEl.get('data-bind')) {
+			} else if (bindText) {
 				binding = createDataBinding(boundEl, bindText);
-				bindings.push(binding);
 			}
+			bindings.push(binding);
 		});
 
 		var easyBinding = function(data, ez) {
@@ -94,43 +103,32 @@
 		return easyBinding;
 	}
 
-	function getUnnestedBoundEls(el) {
-		var boundEls = el.getElements('[data-bind],[data-bind-repeat]');
-		if (el.match('[data-bind],[data-bind-repeat]')) {
-			boundEls.push(el);
-		}
-
-		var unnestedBoundEls = boundEls.filter(function(boundEl) {
-			var isNested = (boundEl.getClosest('[data-bind-repeat]', el) === el);
-			return true; // isNested;
-		});
-
-		return unnestedBoundEls;
-	}
-
 	function createDataBinding(boundEl, bindText) {
+		var functionText;
 		var isJsonSyntax = bindText.match(/^\s*\{/);
 		if (isJsonSyntax)
-			bindText = "with (ez) { this.set(#); }".replace("#", bindText);
+			functionText = "with (ez) { this.set(#); }".replace("#", bindText);
 		else
-			bindText = "with (ez) { # }".replace("#", bindText);
+			functionText = "with (ez) { # }".replace("#", bindText);
 
-		var binding = new Function('data', 'ez', bindText);
+		var binding = new Function('data', 'ez', functionText);
 		return binding.bind(boundEl);
 	}
 	function createDataRepeaterBinding(repeaterEl, bindRepeatText) {
+		var functionText;
 		var hasReturnStatement = bindRepeatText.match(/\breturn\s/);
 		if (!hasReturnStatement)
-			bindRepeatText = "with (ez) { return #; }".replace("#", bindRepeatText);
+			functionText = "with (ez) { return #; }".replace("#", bindRepeatText);
 		else
-			bindRepeatText = "with (ez) { # }".replace("#", bindRepeatText);
+			functionText = "with (ez) { # }".replace("#", bindRepeatText);
 
-		var getItems = new Function('data', 'ez', bindRepeatText);
+		var getItems = new Function('data', 'ez', functionText);
 
 		var repeaterTemplate = repeaterEl.clone();
 		var previousItems = [ repeaterEl ];
 		var repeaterBinding = function(data, ez) {
-			var items = getItems(data, ez);
+			var items = getItems.call(repeaterEl, data, ez);
+			if (!items || items.length === undefined) throw new Error("Repeat statement did not return an array. " + bindRepeatText);
 			for (var itemIndex = 0, length = Math.max(items.length, previousItems.length); itemIndex < length; itemIndex++) {
 				if (itemIndex >= items.length) {
 					if (previousItems.length === 1) {
@@ -153,7 +151,7 @@
 					repeaterItem = repeaterTemplate.clone();
 					previousItems.push(repeaterItem);
 
-					var insertAfter = previousItems[previousItems.length - 1];
+					var insertAfter = previousItems[previousItems.length - 2];
 					insertAfter.grab(repeaterItem, 'after');
 				}
 
