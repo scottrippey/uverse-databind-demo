@@ -15,8 +15,9 @@
 	    <link href="css/reset.css" rel="stylesheet" />
 
 	    <style type="text/less">
-		    @borderColor: hsl(0,0%,0%);
-		    @backgroundColor: hsl(0,0%,80%);
+		    @baseHue: 200;
+		    @borderColor: hsl(@baseHue,50%,15%);
+		    @backgroundColor: hsl(@baseHue,50%,90%);
 		    @shadowColor: hsl(0,0%,20%);
 		    @pipeColor: hsl(0,0%,60%);
 
@@ -78,6 +79,9 @@
 		            }
 		            p, ul, div {
 			            margin-left: 150+10px;
+		            }
+		            p {
+			            margin-bottom: 1em;
 		            }
 			    }
 
