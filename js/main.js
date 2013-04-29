@@ -45,7 +45,7 @@ window.addEvent('domready', function(){
 		flyout.easyBind(flyoutData);
 	}
 
-	setInterval(showNextData, 2000);
+	$$('.flyout').addEvent('click', showNextData);
 	showNextData();
 
 

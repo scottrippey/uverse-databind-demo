@@ -79,14 +79,15 @@
 		var bindings = [];
 		boundEls.each(function(boundEl) {
 			var nestedParent = boundEl.getParent('[data-bind-repeat]');
-			var isNested = (nestedParent && el.contains(nestedParent));
+			var isNested = (nestedParent) && (el !== nestedParent);
 			if (isNested)
 				return;
 
 			var bindRepeatText = boundEl.get('data-bind-repeat')
 				, bindText = boundEl.get('data-bind')
+				, isNestedRepeater = (boundEl !== el) && (bindRepeatText)
 				, binding;
-			if (bindRepeatText && (boundEl !== el)) {
+			if (isNestedRepeater) {
 				binding = createDataRepeaterBinding(boundEl, bindRepeatText);
 			} else if (bindText) {
 				binding = createDataBinding(boundEl, bindText);
