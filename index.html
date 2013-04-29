@@ -167,17 +167,16 @@
 		    </h1>
 	    </header>
 	    <section>
-		    <img src="http://lorempixel.com/400/300"
-		         data-bind="this.set('src', data.imageUrl)"
-				/>
+		    <img src="" data-bind="{ src: data.imageUrl }" />
 		    <p data-bind="{ text: data.description }">
 			    (description goes here)
 		    </p>
 			<ul class="tags">
-			    <li
-					data-bind-repeat="data.tags"
-					data-bind="{ text: data }"
-					> (tag names are repeated here) </li>
+			    <li data-bind-repeat="data.tags">
+				    <span data-bind="{ text: data.toLowerCase() }">
+				        (tag names are repeated here)
+				    </span>
+			    </li>
 		    </ul>
 	    </section>
     </article>

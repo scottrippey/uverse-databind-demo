@@ -1,5 +1,8 @@
 window.addEvent('domready', function(){
 
+
+
+
 	var flyoutDataItems = [
 		{
 			title: "Bacon ipsum"
@@ -35,18 +38,17 @@ window.addEvent('domready', function(){
 	];
 
 	var index = 0;
-	function showNextData() {
-		var flyoutData = flyoutDataItems[index++ % flyoutDataItems.length];
-		var flyout = $$('.flyout');
-		updateFlyout(flyout, flyoutData);
+	function getNextData() {
+		return flyoutDataItems[index++ % flyoutDataItems.length];
 	}
 
-	function updateFlyout(flyout, flyoutData) {
-		flyout.easyBind(flyoutData);
-	}
+	$$('.flyout').addEvent('click', function() {
+		var el = this;
 
-	$$('.flyout').addEvent('click', showNextData);
-	showNextData();
+		var data = getNextData();
+		el.easyBind(data);
+
+	}).fireEvent('click');
 
 
 });
