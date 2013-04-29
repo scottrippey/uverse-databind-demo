@@ -22,15 +22,12 @@
 		/**
 		 *
 		 * @param {*} data
-		 * @param {*} [helper]
-		 * @param {*[]} [scope]
-		 * @param {Number} [index]
-		 * @param {Number} [remaining]
+		 * @param {Object} [options]
 		 * @returns {Element}
 		 */
-		easyBind: function(data, helper, index, remaining) {
+		easyBind: function(data, options) {
 			var dataBinding = getEasyBinding(this);
-			dataBinding(data, helper, index, remaining);
+			dataBinding(data, options);
 			return this;
 		}
 		,
@@ -63,43 +60,6 @@
 		}
 	});
 
-
-	function getDataBinding(el) {
-		var cachedDataBinding = el.retrieve('$dataBinding');
-		if (cachedDataBinding) {
-			return cachedDataBinding;
-		}
-
-		var dataBindings = [];
-
-		var repeater;
-		while (repeater = el.getElement('[data-bind-repeat]')) {
-			var repeaterBinding = createDataRepeaterFunction(repeater);
-			dataBindings.push(repeaterBinding);
-			repeater.set('data-bind-repeat', null);
-		}
-
-		var dataBoundEls = el.getElements('[data-bind]');
-		if (el.match('[data-bind]'))
-			dataBoundEls.push(el);
-
-		dataBoundEls.each(function(el) {
-			var dataBindingFunction = createDataBindingFunction(el);
-			dataBindings.push(dataBindingFunction);
-		});
-
-		var dataBinding = function(data, helper, index, remaining) {
-			Array.each(dataBindings, function(binding) {
-				binding(data, helper, index, remaining);
-			});
-		};
-
-		el.store('$dataBinding', dataBinding);
-
-		return dataBinding;
-	}
-
-
 	/**
 	 * Parses the data-bind attribute into an actual function.
 	 * This method supports 2 syntaxes:
@@ -110,65 +70,13 @@
 	 * @param el
 	 * @returns {Function}
 	 */
-	function createDataBindingFunction(el) {{
-		var dataBindAttribute = el.get('data-bind');
-		if (dataBindAttribute.match(/^\s*\{/))
-			dataBindAttribute = "this.set(#)".replace("#", dataBindAttribute)
-		}
-		var dataBindFn = new Function('data', 'helper', 'scope', 'index', 'remaining', dataBindAttribute);
-		return dataBindFn.bind(el);
-	}
-
-	function createDataRepeaterFunction(repeater) {
-		var dataBindRepeatAttribute = repeater.get('data-bind-repeat');
-		var functionText = "return #;".replace("#", dataBindRepeatAttribute);
-		var getItems = new Function('data', 'helper', 'scope', 'index', 'remaining', functionText);
-
-		var repeaterTemplate = repeater.getChildren().dispose();
-		var repeaterItems = [];
-		var repeaterBinding = function(data, helper, index, remaining) {
-			var items = getItems(data, helper, index, remaining);
-			for (var itemIndex = 0, length = Math.max(items.length, repeaterItems.length); itemIndex < length; itemIndex++) {
-				if (itemIndex >= items.length) {
-					repeaterItems.pop().dispose();
-					continue;
-				}
-
-				var repeaterItem;
-				if (itemIndex < repeaterItems.length) {
-					repeaterItem = repeaterItems[itemIndex];
-				} else {
-					var clonedElements = new Elements(repeaterTemplate.map(function(el) { return el.clone(); }));
-					repeaterItem = clonedElements;
-					repeater.adopt(repeaterItem);
-					repeaterItems.push(repeaterItem);
-				}
-
-				var item = items[itemIndex], itemsRemaining = (items.length - 1 - itemIndex);
-
-				repeaterItem.each(function(el) { el.dataBind(item, helper, itemIndex, itemsRemaining); });
-			}
-		};
-
-		return repeaterBinding;
-	}
-
-
 	function getEasyBinding(el) {
 		var cachedEasyBinding = el.retrieve('$easyBinding');
 		if (cachedEasyBinding) {
 			return cachedEasyBinding;
 		}
 
-		var boundEls = el.getElements('[data-bind],[data-bind-repeat]');
-		if (el.match('[data-bind],[data-bind-repeat]')) {
-			boundEls.push(el);
-		}
-
-		var unnestedBoundEls = boundEls.filter(function(boundEl) {
-			var isNested = (boundEl.getClosest('[data-bind-repeat]', el) === el);
-			return isNested;
-		});
+		var unnestedBoundEls = getUnnestedBoundEls(el);
 
 		var bindings = [];
 		unnestedBoundEls.each(function(boundEl) {
@@ -182,32 +90,51 @@
 			}
 		});
 
-		var easyBinding = function(data, helper, index, remaining) {
+		var easyBinding = function(data, options) {
 			bindings.each(function(binding){
-				binding(data, helper, index, remaining);
+				binding(data, options);
 			});
 		};
 		el.store('$easyBinding', easyBinding);
 		return easyBinding;
 	}
 
+	function getUnnestedBoundEls(el) {
+		var boundEls = el.getElements('[data-bind],[data-bind-repeat]');
+		if (el.match('[data-bind],[data-bind-repeat]')) {
+			boundEls.push(el);
+		}
+		var unnestedBoundEls = boundEls.filter(function(boundEl) {
+			var isNested = (boundEl.getClosest('[data-bind-repeat]', el) === el);
+			return isNested;
+		});
+
+		return unnestedBoundEls;
+	}
+
 	function createDataBinding(boundEl, bindText) {
 		var isJsonSyntax = bindText.match(/^\s*\{/);
 		if (isJsonSyntax)
-			bindText = "this.set(#);".replace("#", bindText);
-		var binding = new Function('data', 'helper', 'scope', 'index', 'remaining', bindText);
+			bindText = "with (ez) { this.set(#); }".replace("#", bindText);
+		else
+			bindText = "with (ez) { # }".replace("#", bindText);
+
+		var binding = new Function('data', 'ez', bindText);
 		return binding.bind(boundEl);
 	}
 	function createDataRepeaterBinding(repeaterEl, bindRepeatText) {
 		var hasReturnStatement = bindRepeatText.match(/\breturn\s/);
 		if (!hasReturnStatement)
-			bindRepeatText = "return #;".replace("#", bindRepeatText);
-		var getItems = new Function('data', 'helper', 'scope', 'index', 'remaining', bindRepeatText);
+			bindRepeatText = "with (ez) { return #; }".replace("#", bindRepeatText);
+		else
+			bindRepeatText = "with (ez) { # }".replace("#", bindRepeatText);
+
+		var getItems = new Function('data', 'ez', bindRepeatText);
 
 		var repeaterTemplate = repeaterEl.clone();
 		var previousItems = [ repeaterEl ];
-		var repeaterBinding = function(data, helper, index, remaining) {
-			var items = getItems(data, helper, index, remaining);
+		var repeaterBinding = function(data, options) {
+			var items = getItems(data, options);
 			for (var itemIndex = 0, length = Math.max(items.length, previousItems.length); itemIndex < length; itemIndex++) {
 				if (itemIndex >= items.length) {
 					if (previousItems.length === 1) {
@@ -235,11 +162,15 @@
 				}
 
 				var item = items[itemIndex], itemsRemaining = (items.length - 1 - itemIndex);
-
-				repeaterItem.easyBind(item, helper, itemIndex, itemsRemaining);
+				options = Object.append(options || {}, {
+					index: itemIndex
+					,remaining: itemsRemaining
+				});
+				repeaterItem.easyBind(item, options);
 			}
 		};
 
 		return repeaterBinding;
 	}
+
 })();
