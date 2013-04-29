@@ -22,23 +22,18 @@
 		/**
 		 *
 		 * @param {*} data
-		 * @param {Object} [options]
+		 * @param {Object} [ez]
 		 * @returns {Element}
 		 */
-		easyBind: function(data, options) {
+		easyBind: function(data, ez) {
+			ez = ez || {};
 			var dataBinding = getEasyBinding(this);
-			dataBinding(data, options);
+			dataBinding(data, ez);
 			return this;
 		}
 		,
-		getClosest: function(matchingSelector, context) {
-			var el = this;
-			while (el && !el.match(matchingSelector)) {
-				if (el === context)
-					return null;
-				el = el.getParent();
-			}
-			return el;
+		getClosest: function(matchingSelector) {
+			return (el.match(matchingSelector) ? el : el.getParent(matchingSelector));
 		}
 		,
 		show: function() {
@@ -90,9 +85,9 @@
 			}
 		});
 
-		var easyBinding = function(data, options) {
+		var easyBinding = function(data, ez) {
 			bindings.each(function(binding){
-				binding(data, options);
+				binding(data, ez);
 			});
 		};
 		el.store('$easyBinding', easyBinding);
@@ -104,9 +99,10 @@
 		if (el.match('[data-bind],[data-bind-repeat]')) {
 			boundEls.push(el);
 		}
+
 		var unnestedBoundEls = boundEls.filter(function(boundEl) {
 			var isNested = (boundEl.getClosest('[data-bind-repeat]', el) === el);
-			return isNested;
+			return true; // isNested;
 		});
 
 		return unnestedBoundEls;
@@ -133,8 +129,8 @@
 
 		var repeaterTemplate = repeaterEl.clone();
 		var previousItems = [ repeaterEl ];
-		var repeaterBinding = function(data, options) {
-			var items = getItems(data, options);
+		var repeaterBinding = function(data, ez) {
+			var items = getItems(data, ez);
 			for (var itemIndex = 0, length = Math.max(items.length, previousItems.length); itemIndex < length; itemIndex++) {
 				if (itemIndex >= items.length) {
 					if (previousItems.length === 1) {
@@ -162,11 +158,11 @@
 				}
 
 				var item = items[itemIndex], itemsRemaining = (items.length - 1 - itemIndex);
-				options = Object.append(options || {}, {
+				Object.append(ez, {
 					index: itemIndex
 					,remaining: itemsRemaining
 				});
-				repeaterItem.easyBind(item, options);
+				repeaterItem.easyBind(item, ez);
 			}
 		};
 
